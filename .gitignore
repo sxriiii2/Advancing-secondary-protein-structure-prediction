@@ -1,0 +1,57 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+ENV/
+.venv
+
+# Model checkpoints and training data
+checkpoints/
+*.pth
+*.pt
+*.ckpt
+
+# Datasets (too large for git)
+datasets/
+databases/
+preprocessed data/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Jupyter
+.ipynb_checkpoints/
+*.ipynb
+
+# Logs
+*.log
+logs/
+
+# Temporary files
+*.tmp
+*.temp
+*.crdownload
+*.download
+
+# Large files
+*.pkl
+*.h5
+*.hdf5
+*.fasta
+*.fasta.gz
+*.fa
+*.fa.gz
+

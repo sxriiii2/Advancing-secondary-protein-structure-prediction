@@ -1,0 +1,57 @@
+PSSM SETUP - WHAT YOU NEED TO DO
+==================================
+
+STEP 1: Download Database
+--------------------------
+Run this PowerShell command:
+  .\download_database.ps1
+
+OR manually download from:
+  https://ftp.uniprot.org/pub/databases/uniprot/uniref/uniref90/uniref90.fasta.gz
+
+Save to: databases/uniref90.fasta.gz
+Size: ~30GB (takes 2-6 hours to download)
+
+
+STEP 2: Install BLAST+
+----------------------
+1. Download: https://ftp.ncbi.nlm.nih.gov/blast/executables/blast+/LATEST/
+2. Install: ncbi-blast-*-win64.exe
+3. Add to PATH: C:\Program Files\NCBI\blast-*\bin\
+4. Test: psiblast -version
+
+
+STEP 3: Extract & Format Database
+----------------------------------
+Extract: uniref90.fasta.gz (use 7-Zip or WinRAR)
+Then run:
+  cd databases
+  makeblastdb -in uniref90.fasta -dbtype prot -out uniref90_db
+
+This takes 1-2 hours!
+
+
+STEP 4: Generate PSSM (After database ready)
+---------------------------------------------
+  py generate_pssm_features.py --db databases/uniref90_db --sequences "preprocessed data/train_sequences.pkl" --output "preprocessed data/train_pssm.pkl"
+
+This takes 4-8 hours for all sequences!
+
+
+STEP 5: Train (Automatic)
+--------------------------
+Once PSSM is generated, just run:
+  py train_model.py
+
+The model will automatically detect and use PSSM!
+
+
+WHAT I'VE DONE
+===============
+✅ Code ready for PSSM
+✅ Model supports PSSM (optional)
+✅ Training automatically uses PSSM if available
+✅ Download script created
+
+You just need to download the database and generate PSSM!
+
