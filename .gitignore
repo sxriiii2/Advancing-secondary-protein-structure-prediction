@@ -4,21 +4,27 @@ __pycache__/
 *$py.class
 *.so
 .Python
-env/
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Virtual environments
 venv/
+env/
 ENV/
 .venv
-
-# Model checkpoints and training data
-checkpoints/
-*.pth
-*.pt
-*.ckpt
-
-# Datasets (too large for git)
-datasets/
-databases/
-preprocessed data/
 
 # IDE
 .vscode/
@@ -27,26 +33,14 @@ preprocessed data/
 *.swo
 *~
 
-# OS
-.DS_Store
-Thumbs.db
-desktop.ini
+# Jupyter Notebook
+.ipynb_checkpoints
 
-# Jupyter
-.ipynb_checkpoints/
-*.ipynb
-
-# Logs
-*.log
-logs/
-
-# Temporary files
-*.tmp
-*.temp
-*.crdownload
-*.download
-
-# Large files
+# Data files (too large for git)
+databases/
+datasets/
+preprocessed data/
+checkpoints/
 *.pkl
 *.h5
 *.hdf5
@@ -55,3 +49,42 @@ logs/
 *.fa
 *.fa.gz
 
+# Model files
+*.pt
+*.pth
+*.ckpt
+*.model
+
+# Logs and outputs
+*.log
+logs/
+outputs/
+results/
+*.png
+*.jpg
+*.pdf
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Temporary files
+*.tmp
+*.temp
+*.lock
+*-lock
+
+# BLAST database files
+*.phr
+*.pin
+*.psq
+*.pal
+*.pdb
+*.pot
+*.ptf
+*.pto
+
+# Training history
+training_history.json
+training_curves.png

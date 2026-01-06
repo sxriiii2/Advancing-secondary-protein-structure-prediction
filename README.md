@@ -47,15 +47,7 @@ pip install -r requirements.txt
 
 ### 1. Download Datasets
 
-```bash
-# Download from all sources (Kaggle, HuggingFace, direct links)
-python download_all_datasets.py
-```
-
-This will download:
-- CB513 dataset from multiple sources
-- Additional benchmark datasets
-- Pre-trained models (optional, for reference)
+Download your protein secondary structure datasets and place them in the `datasets/` folder. The preprocessing script supports multiple formats (CSV, JSON, FASTA).
 
 ### 2. Preprocess Data
 
@@ -68,17 +60,63 @@ This will:
 - Load data from all sources
 - Encode sequences and structures
 - Create train/val/test splits
-- Save processed data
+- Save processed data to `preprocessed data/`
 
-### 3. Train Model
+### 3. (Optional) Generate PSSM Features
+
+For improved accuracy, you can generate Position-Specific Scoring Matrix (PSSM) features using PSI-BLAST:
+
+#### Step 3a: Install BLAST+
+
+1. Download BLAST+ from: https://ftp.ncbi.nlm.nih.gov/blast/executables/blast+/LATEST/
+2. Install: `ncbi-blast-*-win64.exe`
+3. Add to PATH: `C:\Program Files\NCBI\blast-*\bin\`
+4. Restart terminal and verify: `psiblast -version`
+
+See [BLAST_INSTALL_GUIDE.md](BLAST_INSTALL_GUIDE.md) for detailed Windows installation instructions.
+
+#### Step 3b: Download and Format UniRef90 Database
+
+```powershell
+# Download database (~30GB, takes 2-6 hours)
+# Manual download: https://ftp.uniprot.org/pub/databases/uniprot/uniref/uniref90/uniref90.fasta.gz
+# Save to: databases/uniref90.fasta.gz
+
+# Extract and format database (takes 1-2 hours)
+.\setup_pssm_database.ps1
+```
+
+Or manually:
+```bash
+# Extract database
+python extract_database.py
+
+# Format for BLAST (in databases/ folder)
+makeblastdb -in uniref90.fasta -dbtype prot -out uniref90_db
+```
+
+#### Step 3c: Generate PSSM Features
 
 ```bash
-# Train the model
+# Generate PSSM for training data (takes 4-8 hours)
+python generate_pssm_features.py --db databases/uniref90_db --sequences "preprocessed data/train_sequences.pkl" --output "preprocessed data/train_pssm.pkl"
+
+# Generate PSSM for validation data (takes 1-2 hours)
+python generate_pssm_features.py --db databases/uniref90_db --sequences "preprocessed data/val_sequences.pkl" --output "preprocessed data/val_pssm.pkl"
+```
+
+**Note**: The model works without PSSM features (using one-hot encoding only), but PSSM significantly improves accuracy.
+
+### 4. Train Model
+
+```bash
+# Train the model (automatically detects and uses PSSM if available)
 python train_model.py
 ```
 
 Training includes:
-- Automatic GPU detection
+- Automatic PSSM detection (uses PSSM if available, falls back to one-hot encoding)
+- CPU/GPU optimization
 - Learning rate scheduling
 - Early stopping
 - Model checkpointing
@@ -130,19 +168,20 @@ early_stopping_patience=15
 
 ```
 .
-├── download_all_datasets.py    # Comprehensive dataset downloader
 ├── preprocess_data.py          # Data preprocessing pipeline
 ├── model_2dcnn_rnn_bigru.py    # Novel model architecture
 ├── train_model.py              # Training script
+├── generate_pssm_features.py   # PSSM feature generation (optional)
+├── extract_database.py         # Database extraction utility
+├── setup_pssm_database.ps1     # PSSM database setup script (Windows)
+├── BLAST_INSTALL_GUIDE.md      # BLAST+ installation guide
+├── PSSM_INSTRUCTIONS.txt       # PSSM setup instructions
 ├── requirements.txt            # Dependencies
-├── README.md                   # This file
-├── datasets/                   # Downloaded datasets
-│   ├── kaggle/
-│   ├── huggingface/
-│   └── direct/
-├── processed_data/             # Preprocessed data
-└── checkpoints/                # Model checkpoints
+├── LICENSE                     # License file
+└── README.md                   # This file
 ```
+
+**Note**: Large files (databases, datasets, preprocessed data, checkpoints) are excluded from git via `.gitignore`. Download and generate them locally.
 
 ## Results
 
@@ -191,13 +230,15 @@ predictions, probabilities = model.predict(sequences)
 
 ## Training Features
 
-- ✅ Automatic GPU/CPU detection
-- ✅ Learning rate scheduling
-- ✅ Early stopping
-- ✅ Gradient clipping
-- ✅ Model checkpointing
-- ✅ Training curve visualization
-- ✅ Comprehensive metrics (accuracy, precision, recall, F1)
+- ✅ **PSSM Support**: Optional PSSM features for improved accuracy
+- ✅ **Automatic Detection**: Model automatically uses PSSM if available
+- ✅ **CPU Optimized**: Optimized for CPU training (ThinkPad T480 compatible)
+- ✅ **Learning Rate Scheduling**: Adaptive learning rate reduction
+- ✅ **Early Stopping**: Prevents overfitting
+- ✅ **Gradient Clipping**: Stabilizes training
+- ✅ **Model Checkpointing**: Saves best model automatically
+- ✅ **Training Curves**: Visualizes training progress
+- ✅ **Comprehensive Metrics**: Accuracy, precision, recall, F1-score
 
 ## Citation
 
