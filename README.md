@@ -213,11 +213,15 @@ If you use this model, please cite:
 
 ## License
 
-[Your License Here]
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 ## Contact
 
-[Your Contact Information]
+For questions, suggestions, or collaborations, please contact:
+
+**Email**: sxriiii2@gmail.com
+
+**GitHub**: [sxriiii2](https://github.com/sxriiii2)
 
 ---
 
